@@ -2,6 +2,7 @@
 import bcrypt from "bcryptjs"
 import { User } from "../models/user.model.js"
 import { generateJwtToken } from "../../utils/generateJwtToken.js"
+import { sendVerificationEmail } from "../mailtrap/email.js"
 
 
 
@@ -33,6 +34,8 @@ export const signup = async (req, res) => {
         await user.save()
         generateJwtToken(res, user._id)
 
+        await sendVerificationEmail(user.email, verificationTooken)
+
         //password is set to undefined to avoid sending it in the response because we don't want to expose the hashed password to the client. Even though it's hashed, it's a good security practice to not include it in the response.
         return res.status(201).json({
             success: true, message: "User created successfully",
@@ -60,6 +63,8 @@ export const login = async (req, res) => {
         }
         
         generateJwtToken(res, user._id)
+
+        
         user.lastlogin = Date.now()
         await user.save()
         return res.status(200).json({
