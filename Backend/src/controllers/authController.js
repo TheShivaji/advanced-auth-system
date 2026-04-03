@@ -87,7 +87,7 @@ export const verifyOtp = async (req, res) => {
 
     try {
         const user = await User.findOne({
-            verificationToken: otp, 
+            verificationToken: otp,
             verificationTokenExpiredAt: { $gt: Date.now() }
         });
         console.log(user);
@@ -105,7 +105,7 @@ export const verifyOtp = async (req, res) => {
         user.verificationToken = undefined;
         user.verificationTokenExpiredAt = undefined;
         await user.save();
-        
+
         res.status(200).json({
             success: true,
             message: "OTP verified successfully"
@@ -116,3 +116,22 @@ export const verifyOtp = async (req, res) => {
         return res.status(500).json({ success: false, message: "Internal server error" });
     }
 }
+
+export const logout = async (req, res) => {
+    try {
+        res.clearCookie('token', {
+            httpOnly: true,
+            secure: false,   // dev me false
+            sameSite: "lax"
+        });
+
+        res.status(200).json({
+            message: "User are successfully logout"
+        })
+    } catch (error) {
+        console.log("Logout error", error.message)
+        return res.status(500).json({ message: "Internal server error" })
+    }
+
+}
+
