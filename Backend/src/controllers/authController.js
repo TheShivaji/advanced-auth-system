@@ -2,7 +2,7 @@
 import bcrypt from "bcryptjs"
 import { User } from "../models/user.model.js"
 import { generateJwtToken } from "../../utils/generateJwtToken.js"
-import { sendVerificationEmail, sendWelcomeEmail } from "../mailtrap/email.js"
+import { sendPasswordResetConfirmationEmail, sendVerificationEmail, sendWelcomeEmail } from "../mailtrap/email.js"
 import crypto from "crypto"
 import { sendPasswordResetEmail } from "../mailtrap/email.js"
 
@@ -83,7 +83,7 @@ export const login = async (req, res) => {
         return res.status(500).json({ success: false, message: "Internal server error" })
     }
 }
-
+// The verifyOtp function is responsible for verifying the OTP (One-Time Password) sent to the user's email during the signup process. It checks if the provided OTP matches a user in the database and if the OTP has not expired. If the OTP is valid, it marks the user's email as verified, clears the verification token and its expiry time, and sends a welcome email to the user. Finally, it returns a success response. If the OTP is invalid or expired, or if there's an error during the process, it returns an appropriate error response.
 export const verifyOtp = async (req, res) => {
     const { otp } = req.body;
 
@@ -136,6 +136,7 @@ export const logout = async (req, res) => {
     }
 
 }
+// The forgetPass function is responsible for initiating the password reset process. It takes an email from the request body, checks if a user with that email exists, and if so, generates a password reset token and its expiry time. It then saves this information to the user's record in the database and sends a password reset email to the user with a link containing the reset token. If the user is not found or if there's an error during the process, it returns an appropriate error response.
 
 export const forgetPass = async (req , res) => {
     const {email} = req.body
@@ -151,8 +152,42 @@ try {
 
     await sendPasswordResetEmail(user.email , `${process.env.FORGET_PASS}/reset-password?token=${passwordResetToken}`)
 
+    res.status(200).json({success : true , message : "Password reset email sent successfully"})
+
 } catch (error) {
     console.error("Error in forget password:", error.message)
+    return res.status(500).json({ success: false, message: "Internal server error" })
+}
+}
+
+// The resetPass function is responsible for handling the password reset process. It takes a token from the request parameters and a new password from the request body. It first checks if there is a user with the provided token and if the token has not expired. If the token is valid, it hashes the new password, updates the user's password in the database, and clears the reset token and its expiry time. Finally, it sends a confirmation email to the user and returns a success response. If the token is invalid or expired, or if there's an error during the process, it returns an appropriate error response.
+
+export const resetPass = async (req , res) => {
+    const {token} = req.params
+    const {newPassword} = req.body
+    
+try {
+    const user = await User.findOne({
+        resetPasswordToken : token,
+        resetPasswordExpiredAt : {$gt : Date.now()}
+    })
+    
+    if(!user){
+        return res.status(400).json({success : false , message : "Invalid or expired token"})
+    }
+    console.log(user)
+    const hash = await bcrypt.hash(newPassword , 10)
+    user.password = hash
+    user.resetPasswordToken = undefined
+    user.resetPasswordExpiredAt = undefined
+    await user.save()
+
+    await sendPasswordResetConfirmationEmail(user.email)
+
+    res.status(200).json({success : true , message : "Password reset successfully"})
+
+} catch (error) {
+    console.error("Error in reset password:", error.message)
     return res.status(500).json({ success: false, message: "Internal server error" })
 }
 }
