@@ -2,7 +2,7 @@
 import bcrypt from "bcryptjs"
 import { User } from "../models/user.model.js"
 import { generateJwtToken } from "../../utils/generateJwtToken.js"
-import { sendVerificationEmail } from "../mailtrap/email.js"
+import { sendVerificationEmail, sendWelcomeEmail } from "../mailtrap/email.js"
 
 
 
@@ -19,7 +19,7 @@ export const signup = async (req, res) => {
         }
 
         const hash = await bcrypt.hash(password, 10)
-        const verificationTooken = Math.floor(100000 + Math.random() * 900000).toString()
+        const verificationToken = Math.floor(100000 + Math.random() * 900000).toString()
 
         const user = await User({
             email,
@@ -27,15 +27,15 @@ export const signup = async (req, res) => {
             name,
 
             // Verification token and its expiry time for email verification
-            verificationTooken,
-            verificationTookenExpiredAt: Date.now() + (24 * 60 * 60 * 1000) // 24 hours
+            verificationToken: verificationToken,
+            verificationTokenExpiredAt: Date.now() + (24 * 60 * 60 * 1000) // 24 hours
 
         })
         await user.save()
         generateJwtToken(res, user._id)
 
-        await sendVerificationEmail(user.email, verificationTooken)
-        
+        await sendVerificationEmail(user.email, verificationToken)
+
 
         //password is set to undefined to avoid sending it in the response because we don't want to expose the hashed password to the client. Even though it's hashed, it's a good security practice to not include it in the response.
         return res.status(201).json({
@@ -62,10 +62,10 @@ export const login = async (req, res) => {
         if (!isMatch) {
             return res.status(400).json({ success: false, message: "invalid credentials" })
         }
-        
+
         generateJwtToken(res, user._id)
 
-        
+
         user.lastlogin = Date.now()
         await user.save()
         return res.status(200).json({
@@ -75,9 +75,44 @@ export const login = async (req, res) => {
                 password: undefined
             }
         })
-        
+
     } catch (error) {
         console.log("Error in login:", error.message)
         return res.status(500).json({ success: false, message: "Internal server error" })
+    }
+}
+
+export const verifyOtp = async (req, res) => {
+    const { otp } = req.body;
+
+    try {
+        const user = await User.findOne({
+            verificationToken: otp, 
+            verificationTokenExpiredAt: { $gt: Date.now() }
+        });
+        console.log(user);
+
+        // Agar user nahi mila ya OTP expire ho gaya
+        if (!user) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid or expired OTP"
+            });
+        }
+
+        await sendWelcomeEmail(user.email, user.name)
+        user.isVerified = true;
+        user.verificationToken = undefined;
+        user.verificationTokenExpiredAt = undefined;
+        await user.save();
+        
+        res.status(200).json({
+            success: true,
+            message: "OTP verified successfully"
+        });
+
+    } catch (error) {
+        console.log("Error in OTP verification:", error.message);
+        return res.status(500).json({ success: false, message: "Internal server error" });
     }
 }

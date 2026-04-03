@@ -183,3 +183,84 @@ Automated email — do not reply.
 </body>
 </html>
 `;
+
+export const WELCOME_EMAIL_TEMPLATE = (name, email) => `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome</title>
+</head>
+<body style="margin:0; padding:0; background:#f1f3f5; font-family:'Segoe UI', Arial, sans-serif;">
+
+<table width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td align="center" style="padding:40px 15px;">
+
+<table width="100%" style="max-width:600px; background:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 8px 30px rgba(0,0,0,0.08);">
+
+<!-- Header -->
+<tr>
+<td style="background:#212529; padding:25px; text-align:center;">
+<h1 style="color:#ffffff; margin:0; font-size:22px; font-weight:600;">
+Welcome 🎉
+</h1>
+</td>
+</tr>
+
+<!-- Body -->
+<tr>
+<td style="padding:35px; color:#495057; font-size:15px; line-height:1.6;">
+
+<p>Hello ${name},</p>
+
+<p>
+Welcome to our platform! We're excited to have you onboard.
+</p>
+
+<!-- User Info Box -->
+<div style="background:#f8f9fa; border:1px solid #dee2e6; border-radius:8px; padding:15px; margin:20px 0;">
+<p style="margin:0;"><strong>Name:</strong> ${name}</p>
+<p style="margin:5px 0 0;"><strong>Email:</strong> ${email}</p>
+</div>
+
+<p>
+Your account has been successfully created and you're ready to get started.
+</p>
+
+<div style="text-align:center; margin:30px 0;">
+<a href="#" 
+style="background:#212529; color:white; padding:14px 30px; text-decoration:none; border-radius:6px; font-weight:600; display:inline-block;">
+Get Started
+</a>
+</div>
+
+<p>
+If you have any questions, feel free to reach out to our support team.
+</p>
+
+<p style="margin-top:25px;">
+Best regards,<br>
+<strong>Your App Team</strong>
+</p>
+
+</td>
+</tr>
+
+<!-- Footer -->
+<tr>
+<td style="text-align:center; padding:15px; font-size:12px; color:#adb5bd;">
+This is an automated email. Please do not reply.
+</td>
+</tr>
+
+</table>
+
+</td>
+</tr>
+</table>
+
+</body>
+</html>
+`;
