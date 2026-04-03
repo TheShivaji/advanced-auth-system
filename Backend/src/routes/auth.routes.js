@@ -8,7 +8,7 @@ authRouter.post("/signup" , signup)
 authRouter.post("/login" , login)
 authRouter.post("/logout" , logout)
 authRouter.post("/verify-otp" , verifyOtp) 
-authRouter.post("/reset-password" , forget-password)
+authRouter.post("/reset-password" , forgetPass)
 
 
 export default authRouter

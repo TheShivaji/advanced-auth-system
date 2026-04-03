@@ -3,6 +3,8 @@ import bcrypt from "bcryptjs"
 import { User } from "../models/user.model.js"
 import { generateJwtToken } from "../../utils/generateJwtToken.js"
 import { sendVerificationEmail, sendWelcomeEmail } from "../mailtrap/email.js"
+import crypto from "crypto"
+import { sendPasswordResetEmail } from "../mailtrap/email.js"
 
 
 
@@ -135,3 +137,22 @@ export const logout = async (req, res) => {
 
 }
 
+export const forgetPass = async (req , res) => {
+    const {email} = req.body
+try {
+    const user = await User.findOne({email})
+    if(!user){
+        return res.status(400).json({success : false , message : "User not found"})
+    }
+    const passwordResetToken = crypto.randomBytes(20).toString("hex")
+    user.passwordResetToken = passwordResetToken
+    user.passwordResetTokenExpiredAt = Date.now() + (1 * 60 * 60 * 1000) // 1 hour
+    await user.save()
+
+    await sendPasswordResetEmail(user.email , `${process.env.FORGET_PASS}/reset-password?token=${passwordResetToken}`)
+
+} catch (error) {
+    console.error("Error in forget password:", error.message)
+    return res.status(500).json({ success: false, message: "Internal server error" })
+}
+}
