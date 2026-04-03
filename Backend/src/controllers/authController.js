@@ -35,6 +35,7 @@ export const signup = async (req, res) => {
         generateJwtToken(res, user._id)
 
         await sendVerificationEmail(user.email, verificationTooken)
+        
 
         //password is set to undefined to avoid sending it in the response because we don't want to expose the hashed password to the client. Even though it's hashed, it's a good security practice to not include it in the response.
         return res.status(201).json({

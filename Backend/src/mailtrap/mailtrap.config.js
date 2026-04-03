@@ -1,17 +1,22 @@
 import dotenv from "dotenv";
-import { MailtrapClient } from "mailtrap";
+import nodemailer from "nodemailer";
 
 dotenv.config();
 
-export const mailtrap = new MailtrapClient({
-    token: process.env.MAILTRAP_API_TOKEN,
-    sandbox: true,
-    testInboxId: process.env.MAILTRAP_INBOX_ID,
+const gemail = process.env.GMAIL_USER;
+const gpassword = process.env.GMAIL_PASS;
+
+export const transport = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: gemail, // Yeh tera apna username hai
+        pass: gpassword
+    }
 });
 
 export const sender = {
-    email: "shivajijagdale2005@gmail.com",
-    name: "Shivaji Jagdale",
+    address: gemail, // Yeh tera apna email address hai
+    name: "My MERN App",
 };
 
 

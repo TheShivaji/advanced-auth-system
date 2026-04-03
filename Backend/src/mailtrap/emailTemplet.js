@@ -4,57 +4,55 @@ export const VERIFICATION_EMAIL_TEMPLATE = `
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Email Verification</title>
+  <title>Verify Email</title>
 </head>
-<body style="margin:0; padding:0; background:#f4f6f8; font-family:Arial, sans-serif;">
+<body style="margin:0; padding:0; background:#f1f3f5; font-family: 'Segoe UI', Arial, sans-serif;">
 
-  <table width="100%" cellpadding="0" cellspacing="0">
-    <tr>
-      <td align="center" style="padding:40px 10px;">
-        
-        <table width="100%" max-width="600px" style="background:#ffffff; border-radius:10px; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,0.08);">
-          
-          <tr>
-            <td style="background:#4CAF50; padding:20px; text-align:center;">
-              <h1 style="color:#ffffff; margin:0; font-size:24px;">Verify Your Email</h1>
-            </td>
-          </tr>
+<table width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td align="center" style="padding:40px 15px;">
 
-          <tr>
-            <td style="padding:30px;">
-              <p style="margin:0 0 15px;">Hello,</p>
+<table width="100%" style="max-width:600px; background:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 8px 30px rgba(0,0,0,0.08);">
 
-              <p style="margin:0 0 20px;">
-                Thanks for signing up! Use the verification code below:
-              </p>
+<tr>
+<td style="background:#212529; padding:25px; text-align:center;">
+<h1 style="color:#ffffff; margin:0; font-size:22px; font-weight:600;">Email Verification</h1>
+</td>
+</tr>
 
-              <div style="text-align:center; margin:30px 0;">
-                <span style="display:inline-block; background:#f0fdf4; color:#4CAF50; padding:15px 25px; font-size:28px; font-weight:bold; letter-spacing:6px; border-radius:8px;">
-                  {verificationCode}
-                </span>
-              </div>
+<tr>
+<td style="padding:35px; color:#495057; font-size:15px; line-height:1.6;">
 
-              <p style="margin:0 0 10px;">This code expires in 15 minutes.</p>
+<p>Hello,</p>
 
-              <p style="margin:0 0 20px;">
-                If you didn’t create this account, you can safely ignore this email.
-              </p>
+<p>Thanks for signing up. Please use the verification code below:</p>
 
-              <p style="margin:0;">Best regards,<br><strong>Your App Team</strong></p>
-            </td>
-          </tr>
+<div style="text-align:center; margin:30px 0;">
+<span style="display:inline-block; background:#f8f9fa; border:1px dashed #ced4da; color:#212529; padding:16px 28px; font-size:26px; font-weight:600; letter-spacing:6px; border-radius:8px;">
+{verificationCode}
+</span>
+</div>
 
-          <tr>
-            <td style="text-align:center; padding:15px; font-size:12px; color:#999;">
-              This is an automated email. Please do not reply.
-            </td>
-          </tr>
+<p>This code will expire in <strong>15 minutes</strong>.</p>
 
-        </table>
+<p>If you didn’t create this account, you can safely ignore this email.</p>
 
-      </td>
-    </tr>
-  </table>
+<p style="margin-top:25px;">Regards,<br><strong>Team Shivaji</strong></p>
+
+</td>
+</tr>
+
+<tr>
+<td style="text-align:center; padding:15px; font-size:12px; color:#adb5bd;">
+This is an automated email. Please do not reply.
+</td>
+</tr>
+
+</table>
+
+</td>
+</tr>
+</table>
 
 </body>
 </html>
@@ -68,56 +66,58 @@ export const PASSWORD_RESET_SUCCESS_TEMPLATE = `
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Password Reset Successful</title>
 </head>
-<body style="margin:0; padding:0; background:#f4f6f8; font-family:Arial, sans-serif;">
+<body style="margin:0; padding:0; background:#f1f3f5; font-family:'Segoe UI', Arial, sans-serif;">
 
-  <table width="100%" cellpadding="0" cellspacing="0">
-    <tr>
-      <td align="center" style="padding:40px 10px;">
-        
-        <table width="100%" max-width="600px" style="background:#ffffff; border-radius:10px; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,0.08);">
-          
-          <tr>
-            <td style="background:#4CAF50; padding:20px; text-align:center;">
-              <h1 style="color:#ffffff; margin:0; font-size:24px;">Password Reset Successful</h1>
-            </td>
-          </tr>
+<table width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td align="center" style="padding:40px 15px;">
 
-          <tr>
-            <td style="padding:30px;">
-              <p>Hello,</p>
+<table width="100%" style="max-width:600px; background:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 8px 30px rgba(0,0,0,0.08);">
 
-              <p>Your password has been successfully reset.</p>
+<tr>
+<td style="background:#212529; padding:25px; text-align:center;">
+<h1 style="color:#ffffff; margin:0; font-size:22px;">Password Reset Successful</h1>
+</td>
+</tr>
 
-              <div style="text-align:center; margin:30px 0;">
-                <div style="background:#4CAF50; color:white; width:60px; height:60px; line-height:60px; border-radius:50%; font-size:28px; margin:auto;">
-                  ✓
-                </div>
-              </div>
+<tr>
+<td style="padding:35px; color:#495057; font-size:15px; line-height:1.6;">
 
-              <p>If this wasn’t you, contact support immediately.</p>
+<p>Hello,</p>
 
-              <p><strong>Security tips:</strong></p>
-              <ul style="padding-left:20px;">
-                <li>Use a strong password</li>
-                <li>Enable 2FA</li>
-                <li>Don’t reuse passwords</li>
-              </ul>
+<p>Your password has been successfully reset.</p>
 
-              <p>Best regards,<br><strong>Your App Team</strong></p>
-            </td>
-          </tr>
+<div style="text-align:center; margin:30px 0;">
+<div style="background:#212529; color:white; width:65px; height:65px; line-height:65px; border-radius:50%; font-size:28px; margin:auto;">
+✓
+</div>
+</div>
 
-          <tr>
-            <td style="text-align:center; padding:15px; font-size:12px; color:#999;">
-              Automated message — do not reply.
-            </td>
-          </tr>
+<p>If this wasn't you, please contact support immediately.</p>
 
-        </table>
+<p><strong>Security Tips:</strong></p>
+<ul style="padding-left:18px;">
+<li>Use strong passwords</li>
+<li>Enable 2FA</li>
+<li>Avoid password reuse</li>
+</ul>
 
-      </td>
-    </tr>
-  </table>
+<p style="margin-top:25px;">Regards,<br><strong>Your App Team</strong></p>
+
+</td>
+</tr>
+
+<tr>
+<td style="text-align:center; padding:15px; font-size:12px; color:#adb5bd;">
+Automated email — do not reply.
+</td>
+</tr>
+
+</table>
+
+</td>
+</tr>
+</table>
 
 </body>
 </html>
@@ -131,52 +131,54 @@ export const PASSWORD_RESET_REQUEST_TEMPLATE = `
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Reset Password</title>
 </head>
-<body style="margin:0; padding:0; background:#f4f6f8; font-family:Arial, sans-serif;">
+<body style="margin:0; padding:0; background:#f1f3f5; font-family:'Segoe UI', Arial, sans-serif;">
 
-  <table width="100%" cellpadding="0" cellspacing="0">
-    <tr>
-      <td align="center" style="padding:40px 10px;">
-        
-        <table width="100%" max-width="600px" style="background:#ffffff; border-radius:10px; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,0.08);">
-          
-          <tr>
-            <td style="background:#4CAF50; padding:20px; text-align:center;">
-              <h1 style="color:#ffffff; margin:0; font-size:24px;">Reset Your Password</h1>
-            </td>
-          </tr>
+<table width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td align="center" style="padding:40px 15px;">
 
-          <tr>
-            <td style="padding:30px;">
-              <p>Hello,</p>
+<table width="100%" style="max-width:600px; background:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 8px 30px rgba(0,0,0,0.08);">
 
-              <p>We received a request to reset your password.</p>
+<tr>
+<td style="background:#212529; padding:25px; text-align:center;">
+<h1 style="color:#ffffff; margin:0; font-size:22px;">Reset Your Password</h1>
+</td>
+</tr>
 
-              <div style="text-align:center; margin:30px 0;">
-                <a href="{resetURL}" 
-                   style="background:#4CAF50; color:white; padding:14px 28px; text-decoration:none; border-radius:6px; font-weight:bold; display:inline-block;">
-                   Reset Password
-                </a>
-              </div>
+<tr>
+<td style="padding:35px; color:#495057; font-size:15px; line-height:1.6;">
 
-              <p>This link will expire in 1 hour.</p>
+<p>Hello,</p>
 
-              <p>If you didn’t request this, ignore this email.</p>
+<p>We received a request to reset your password.</p>
 
-              <p>Best regards,<br><strong>Your App Team</strong></p>
-            </td>
-          </tr>
+<div style="text-align:center; margin:30px 0;">
+<a href="{resetURL}" 
+style="background:#212529; color:white; padding:14px 30px; text-decoration:none; border-radius:6px; font-weight:600; display:inline-block;">
+Reset Password
+</a>
+</div>
 
-          <tr>
-            <td style="text-align:center; padding:15px; font-size:12px; color:#999;">
-              Automated email — do not reply.
-            </td>
-          </tr>
+<p>This link will expire in <strong>1 hour</strong>.</p>
 
-        </table>
+<p>If you didn’t request this, you can ignore this email.</p>
 
-      </td>
-    </tr>
-  </table>
+<p style="margin-top:25px;">Regards,<br><strong>Your App Team</strong></p>
+
+</td>
+</tr>
+
+<tr>
+<td style="text-align:center; padding:15px; font-size:12px; color:#adb5bd;">
+Automated email — do not reply.
+</td>
+</tr>
+
+</table>
+
+</td>
+</tr>
+</table>
 
 </body>
 </html>
