@@ -1,9 +1,11 @@
 import express from "express"
-import { login, signup , verifyOtp , logout , forgetPass, resetPass } from "../controllers/authController.js"
+import { login, signup , verifyOtp , logout , forgetPass, resetPass, checkauth } from "../controllers/authController.js"
 
 
 const authRouter = express.Router()
 
+
+authRouter.get("/check , identity" , checkauth)
 authRouter.post("/signup" , signup)
 authRouter.post("/login" , login)
 authRouter.post("/logout" , logout)

@@ -1,5 +1,5 @@
 // all This commemted is for my review purpose only, I will remove it later
-import bcrypt from "bcryptjs"
+import bcryptjs from "bcryptjs"
 import { User } from "../models/user.model.js"
 import { generateJwtToken } from "../../utils/generateJwtToken.js"
 import { sendPasswordResetConfirmationEmail, sendVerificationEmail, sendWelcomeEmail } from "../mailtrap/email.js"
@@ -138,56 +138,74 @@ export const logout = async (req, res) => {
 }
 // The forgetPass function is responsible for initiating the password reset process. It takes an email from the request body, checks if a user with that email exists, and if so, generates a password reset token and its expiry time. It then saves this information to the user's record in the database and sends a password reset email to the user with a link containing the reset token. If the user is not found or if there's an error during the process, it returns an appropriate error response.
 
-export const forgetPass = async (req , res) => {
-    const {email} = req.body
-try {
-    const user = await User.findOne({email})
-    if(!user){
-        return res.status(400).json({success : false , message : "User not found"})
+export const forgetPass = async (req, res) => {
+    const { email } = req.body;
+    try {
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(400).json({ success: false, message: "User not found" });
+        }
+
+        // Generate reset token
+        const resetToken = crypto.randomBytes(20).toString("hex");
+        const resetTokenExpiresAt = Date.now() + 1 * 60 * 60 * 1000; // 1 hour
+        console.log(resetToken)
+        user.resetPasswordToken = resetToken;
+        user.resetPasswordExpiredAt = resetTokenExpiresAt;
+
+        await user.save();
+
+        // send email
+        await sendPasswordResetEmail(user.email, `${process.env.CLIENT_URL}/reset-password/${resetToken}`);
+
+        res.status(200).json({ success: true, message: "Password reset link sent to your email" });
+    } catch (error) {
+        console.log("Error in forgotPassword ", error);
+        res.status(400).json({ success: false, message: error.message });
     }
-    const passwordResetToken = crypto.randomBytes(20).toString("hex")
-    user.passwordResetToken = passwordResetToken
-    user.passwordResetTokenExpiredAt = Date.now() + (1 * 60 * 60 * 1000) // 1 hour
-    await user.save()
+};
 
-    await sendPasswordResetEmail(user.email , `${process.env.FORGET_PASS}/reset-password?token=${passwordResetToken}`)
+export const resetPass = async (req, res) => {
+    try {
+        const { token } = req.params;
+        const { password } = req.body;
 
-    res.status(200).json({success : true , message : "Password reset email sent successfully"})
+        const user = await User.findOne({
+            resetPasswordToken: token.trim(),
+            resetPasswordExpiredAt: { $gt: new Date() },
+        });
+        if (!user) {
+            return res.status(400).json({ success: false, message: "Invalid or expired reset token" });
+        }
 
-} catch (error) {
-    console.error("Error in forget password:", error.message)
-    return res.status(500).json({ success: false, message: "Internal server error" })
-}
-}
+        // update password
+        const hashedPassword = await bcryptjs.hash(password, 10);
 
-// The resetPass function is responsible for handling the password reset process. It takes a token from the request parameters and a new password from the request body. It first checks if there is a user with the provided token and if the token has not expired. If the token is valid, it hashes the new password, updates the user's password in the database, and clears the reset token and its expiry time. Finally, it sends a confirmation email to the user and returns a success response. If the token is invalid or expired, or if there's an error during the process, it returns an appropriate error response.
+        user.password = hashedPassword;
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpiredAt = undefined;
+        await user.save();
 
-export const resetPass = async (req , res) => {
-    const {token} = req.params
-    const {newPassword} = req.body
-    
-try {
-    const user = await User.findOne({
-        resetPasswordToken : token,
-        resetPasswordExpiredAt : {$gt : Date.now()}
-    })
-    
-    if(!user){
-        return res.status(400).json({success : false , message : "Invalid or expired token"})
+        await sendPasswordResetConfirmationEmail(user.email);
+
+        res.status(200).json({ success: true, message: "Password reset successful" });
+    } catch (error) {
+        console.log("Error in resetPassword ", error);
+        res.status(400).json({ success: false, message: error.message });
     }
-    console.log(user)
-    const hash = await bcrypt.hash(newPassword , 10)
-    user.password = hash
-    user.resetPasswordToken = undefined
-    user.resetPasswordExpiredAt = undefined
-    await user.save()
+};
+export const checkauth = async (req, res) => {
+    try {
+            const user = await User.findById(req.userId)
+                if (!user) {
+            return res.status(400).json({ success: false, message: "User not found" });
+        }
 
-    await sendPasswordResetConfirmationEmail(user.email)
+        res.status(200).json({ success: true, message: "User is authenticated" });
+    } catch (error) {
+        console.log("Error in checkauth ", error);
+        res.status(400).json({ success: false, message: error.message });
+    }
 
-    res.status(200).json({success : true , message : "Password reset successfully"})
-
-} catch (error) {
-    console.error("Error in reset password:", error.message)
-    return res.status(500).json({ success: false, message: "Internal server error" })
-}
 }
