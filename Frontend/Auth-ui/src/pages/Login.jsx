@@ -28,7 +28,6 @@ const LoginPage = () => {
         bg-white/10 backdrop-blur-2xl
         border border-white/20
         rounded-2xl
-        shadow-[0_8px_32px_rgba(0,0,0,0.7)]
         overflow-hidden
       "
         >
@@ -37,7 +36,6 @@ const LoginPage = () => {
                 {/* Heading */}
                 <h2 className="
           text-3xl font-bold text-center text-white mb-6
-          drop-shadow-[0_2px_10px_rgba(255,255,255,0.2)]
         ">
                     Welcome Back
                 </h2>

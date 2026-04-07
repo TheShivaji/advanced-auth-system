@@ -32,7 +32,6 @@ const SignUpPage = () => {
         bg-white/10 backdrop-blur-2xl
         border border-white/20
         rounded-2xl
-        shadow-[0_8px_32px_rgba(0,0,0,0.7)]
         overflow-hidden
       "
         >
