@@ -1,27 +1,30 @@
 import { motion } from "framer-motion";
 import Input from "../components/Input";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PasswordStrengthMeter from "../components/PasswordStrengthMeter";
 import { User, Mail, Lock, Loader } from "lucide-react";
+import { useAuthStore } from "../store/authStore";
 
 const SignUpPage = () => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
 
-    const handleSignUp = (e) => {
+    const { signup, error, isLoading } = useAuthStore();
+    const navigate = useNavigate();
+
+    const handleSignUp = async (e) => {
         e.preventDefault();
-        setIsLoading(true);
-
-        // 🔥 fake delay (UI testing)
-        setTimeout(() => {
-            setIsLoading(false);
-            console.log(name, email, password);
-        }, 1500);
+        try {
+            await signup(email, password, name);
+            navigate("/verify-email");
+        } catch (error) {
+            console.error("Signup error:", error);
+        }
     };
 
+    // ✅ UI YAHAN HOGA (NOT inside function)
     return (
         <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -35,7 +38,6 @@ const SignUpPage = () => {
         overflow-hidden
       "
         >
-            {/* 🔥 Header */}
             <div className="p-8">
                 <h2 className="text-3xl font-bold mb-6 text-center text-white">
                     Create Account
@@ -66,6 +68,10 @@ const SignUpPage = () => {
                         onChange={(e) => setPassword(e.target.value)}
                     />
 
+                    {error && (
+                        <p className="text-red-400 text-sm mt-1">{error}</p>
+                    )}
+
                     <PasswordStrengthMeter password={password} />
 
                     <motion.button
@@ -91,7 +97,6 @@ const SignUpPage = () => {
                 </form>
             </div>
 
-            {/* 🔥 Footer */}
             <div className="px-8 py-4 bg-white/5 border-t border-white/10 flex justify-center">
                 <p className="text-sm text-gray-400">
                     Already have an account?{" "}

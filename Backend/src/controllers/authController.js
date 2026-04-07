@@ -20,7 +20,7 @@ export const signup = async (req, res) => {
             return res.status(400).json({ success: false, message: "User already exists" })
         }
 
-        const hash = await bcrypt.hash(password, 10)
+        const hash = await bcryptjs.hash(password, 10)
         const verificationToken = Math.floor(100000 + Math.random() * 900000).toString()
 
         const user = await User({
@@ -48,6 +48,7 @@ export const signup = async (req, res) => {
             }
         })
     } catch (error) {
+        console.log("Error in signup:", error.message)
         return res.status(500).json({ success: false, message: "Internal server error" })
     }
 }
