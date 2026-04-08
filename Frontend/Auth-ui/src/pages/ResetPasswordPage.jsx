@@ -30,6 +30,9 @@ const ResetPasswordPage = () => {
 
         try {
             await resetPassword(token, password);
+            if (!token) {
+                return <p className="text-white">Invalid or expired link</p>;
+            }
 
             setSuccess(true);
             toast.success("Password reset successful");

@@ -61,7 +61,7 @@ export const login = async (req, res) => {
         if (!user) {
             return res.status(400).json({ success: false, message: "invalid credentials" })
         }
-        const isMatch = await bcrypt.compare(password, user.password)
+        const isMatch = await bcryptjs.compare(password, user.password)
         if (!isMatch) {
             return res.status(400).json({ success: false, message: "invalid credentials" })
         }
@@ -198,12 +198,18 @@ export const resetPass = async (req, res) => {
 };
 export const checkauth = async (req, res) => {
     try {
-            const user = await User.findById(req.userId)
-                if (!user) {
+        const user = await User.findById(req.userId)
+        if (!user) {
             return res.status(400).json({ success: false, message: "User not found" });
         }
 
-        res.status(200).json({ success: true, message: "User is authenticated" });
+        res.status(200).json({
+            success: true, message: "User is authenticated"
+            , user: {
+                ...user._doc,
+                password: undefined
+            }
+        });
     } catch (error) {
         console.log("Error in checkauth ", error);
         res.status(400).json({ success: false, message: error.message });

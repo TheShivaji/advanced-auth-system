@@ -12,6 +12,8 @@ import LoadingSpinner from "./components/Loadingspinner";
 import ForgetPasswordPage from "./pages/ForgetPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 
+
+
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, user } = useAuthStore();
 
@@ -36,17 +38,15 @@ const RedirectAuthenticatedUser = ({ children }) => {
 };
 
 const App = () => {
-  const { isCheckingAuth, checkAuth, isAuthenticated, user } = useAuthStore();
+  const { isCheckingAuth, checkAuth} = useAuthStore();
+
+
 
   useEffect(() => {
-    if(!user){
-      checkAuth();
-    }
-  }, []);
+    checkAuth();
+  }, [checkAuth]);
 
-  if (isCheckingAuth && window.location.pathname !== "/login" && window.location.pathname !== "/signup") {
-    return <LoadingSpinner />;
-  }
+  if (isCheckingAuth) return <LoadingSpinner />;
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#0f0f0f]">
 
@@ -76,9 +76,7 @@ const App = () => {
           <Route path="/forgot-password" element={<RedirectAuthenticatedUser>
             <ForgetPasswordPage />
           </RedirectAuthenticatedUser>} />
-          <Route path="/reset-password" element={<RedirectAuthenticatedUser>
-            <ResetPasswordPage />
-          </RedirectAuthenticatedUser>} />
+          <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
         </Routes>
         <Toaster />
       </div>
