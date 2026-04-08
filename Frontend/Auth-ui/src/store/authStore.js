@@ -53,12 +53,12 @@ export const useAuthStore = create((set) => ({
 	checkAuth: async () => {
 		set({ isCheckingAuth: true });
 		try {
-			
+
 			const response = await axios.get(`${API_URL}/check`);
 			set({ user: response.data.user, isAuthenticated: true, isCheckingAuth: false });
 
 		} catch (error) {
-			
+
 			set({
 				isLoading: false,
 				error: error.response.data.message || "Error sending reset password email",
@@ -74,6 +74,19 @@ export const useAuthStore = create((set) => ({
 		} catch (error) {
 			set({ error: "Error logging out", isLoading: false });
 			throw error;
+		}
+	},
+	forgotPassword: async (email) => {
+		set({ isLoading: true, error: null });
+		try {
+			const response = await axios.post(`${API_URL}/forget-password`, { email });
+			set({ message: response.data.message, isLoading: false });
+		} catch (error) {
+			set({
+				user: null,
+				isAuthenticated: false,
+				isCheckingAuth: false,
+			});
 		}
 	},
 }));
