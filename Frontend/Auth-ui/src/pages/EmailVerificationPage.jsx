@@ -1,14 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useAuthStore } from "../store/authStore";
+import toast from "react-hot-toast";
 
 
 const EmailVerificationPage = () => {
     const [code, setCode] = useState(["", "", "", "", "", ""]);
-    const [isLoading, setIsLoading] = useState(false);
     const inputRefs = useRef([]);
     const navigate = useNavigate();
 
+    const { isLoading, verifyEmail, error } = useAuthStore();
     const handleChange = (index, value) => {
         const newCode = [...code];
 
@@ -41,17 +43,14 @@ const EmailVerificationPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setIsLoading(true);
-
         const verificationCode = code.join("");
-
-        // 🔥 fake delay (UI test)
-        setTimeout(() => {
-            setIsLoading(false);
-            console.log("OTP:", verificationCode);
-            toast.success("Email verified successfully");
+        try {
+            await verifyEmail(verificationCode);
             navigate("/");
-        }, 1500);
+            toast.success("Email verified successfully");
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     useEffect(() => {
@@ -111,7 +110,7 @@ const EmailVerificationPage = () => {
                             />
                         ))}
                     </div>
-
+                        {error && <p className="text-red-500 text-sm text-center">{error}</p>}
                     {/* 🔥 BUTTON */}
                     <motion.button
                         whileHover={{ scale: 1.03 }}
