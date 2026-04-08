@@ -1,13 +1,48 @@
 import React from "react";
 import FloatingShape from "./components/FloatingShape";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import SignupPage from "./pages/Signup";
 import EmailVerificationPage from "./pages/EmailVerificationPage";
 import { Toaster } from "react-hot-toast";
+import { useEffect } from "react";
+import { useAuthStore } from "./store/authStore";
+import LoadingSpinner from "./components/Loadingspinner";
+
+const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated, user } = useAuthStore();
+
+  if (!isAuthenticated) {
+    return <Navigate to='/login' replace />;
+  }
+
+  if (!user.isVerified) {
+    return <Navigate to='/verify-email' replace />;
+  }
+  
+  return children;
+};
+const RedirectAuthenticatedUser = ({ children }) => {
+	const { isAuthenticated, user } = useAuthStore();
+
+	if (isAuthenticated && user.isVerified) {
+		return <Navigate to='/' replace />;
+	}
+
+	return children;
+};
 
 const App = () => {
+  const { isCheckingAuth, checkAuth, isAuthenticated, user } = useAuthStore();
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+  if (isCheckingAuth) return <LoadingSpinner />;
+  console.log("isAuthenticated" , isAuthenticated);
+  console.log(user);
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#0f0f0f]">
 
@@ -24,9 +59,15 @@ const App = () => {
       {/* 💻 content */}
       <div className="relative z-10 flex items-center justify-center min-h-screen px-4">
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/" element={<ProtectedRoute>
+            <Home />
+          </ProtectedRoute>} />
+          <Route path="/login" element={<RedirectAuthenticatedUser>
+            <Login />
+          </RedirectAuthenticatedUser>} />
+          <Route path="/signup" element={<RedirectAuthenticatedUser>
+            <SignupPage />
+          </RedirectAuthenticatedUser>} />
           <Route path="/verify-email" element={<EmailVerificationPage />} />
         </Routes>
         <Toaster />
