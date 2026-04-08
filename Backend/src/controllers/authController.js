@@ -111,7 +111,11 @@ export const verifyOtp = async (req, res) => {
 
         res.status(200).json({
             success: true,
-            message: "OTP verified successfully"
+            message: "OTP verified successfully",
+            user: {
+                ...user._doc,
+                password: undefined
+            }
         });
 
     } catch (error) {
