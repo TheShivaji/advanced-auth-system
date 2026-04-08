@@ -20,17 +20,17 @@ const ProtectedRoute = ({ children }) => {
   if (!user.isVerified) {
     return <Navigate to='/verify-email' replace />;
   }
-  
+
   return children;
 };
 const RedirectAuthenticatedUser = ({ children }) => {
-	const { isAuthenticated, user } = useAuthStore();
+  const { isAuthenticated, user } = useAuthStore();
 
-	if (isAuthenticated && user.isVerified) {
-		return <Navigate to='/' replace />;
-	}
+  if (isAuthenticated && user.isVerified) {
+    return <Navigate to='/' replace />;
+  }
 
-	return children;
+  return children;
 };
 
 const App = () => {
@@ -40,9 +40,9 @@ const App = () => {
     checkAuth();
   }, [checkAuth]);
 
-  if (isCheckingAuth) return <LoadingSpinner />;
-  console.log("isAuthenticated" , isAuthenticated);
-  console.log(user);
+  if (isCheckingAuth && window.location.pathname !== "/login" && window.location.pathname !== "/signup") {
+    return <LoadingSpinner />;
+  }
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#0f0f0f]">
 
